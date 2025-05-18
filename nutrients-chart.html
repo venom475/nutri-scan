@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nutrients Chart - NutriScan</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fafb;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm fixed top-0 left-0 w-full z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-apple-alt text-2xl text-green-500"></i>
+                <span class="text-xl font-bold text-gray-800">NutriScan</span>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-600 hover:text-green-600">Home</a>
+                <a href="features.html" class="text-gray-600 hover:text-green-600">Features</a>
+                <a href="how-it-works.html" class="text-gray-600 hover:text-green-600">How It Works</a>
+                <a href="about.html" class="text-gray-600 hover:text-green-600">About</a>
+                <a href="nutrients-chart.html" class="text-green-600 font-medium">Nutrients Chart</a>
+            </nav>
+            <button class="md:hidden text-gray-600">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 pt-32 pb-16 max-w-5xl">
+        <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Nutrients Chart</h1>
+
+        <form id="selectionForm" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md space-y-6">
+            <div>
+                <label for="ageGroup" class="block text-gray-700 font-semibold mb-2">Select Age Group</label>
+                <select id="ageGroup" name="ageGroup" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                    <option value="" disabled selected>Select age group</option>
+                    <option value="10-15">10-15 Years</option>
+                    <option value="15-20">15-20 Years</option>
+                    <option value="20-25">20-25 Years</option>
+                    <option value="25-30">25-30 Years</option>
+                    <option value="30+">30+ Years</option>
+                </select>
+            </div>
+            <div>
+                <label for="gender" class="block text-gray-700 font-semibold mb-2">Select Gender</label>
+                <select id="gender" name="gender" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                    <option value="" disabled selected>Select gender</option>
+                    <option value="Girls">Girls</option>
+                    <option value="Boys">Boys</option>
+                </select>
+            </div>
+            <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-md font-medium hover:bg-green-700 transition duration-300">Show Nutrient Chart</button>
+        </form>
+
+        <section id="chartSection" class="mt-12 max-w-5xl mx-auto hidden">
+            <h2 id="chartTitle" class="text-2xl font-semibold mb-6 text-gray-800"></h2>
+            <div id="nutrientTables" class="space-y-8"></div>
+        </section>
+    </main>
+
+    <script>
+        const nutrientData = {
+            "10-15": {
+                "Girls and Boys": [
+                    {
+                        "Nutrient": "Carbohydrates",
+                        "Recommended Intake (Daily)": "200-250g",
+                        "Key Food Sources": "Rice, whole-grain bread, oats, potatoes"
+                    },
+                    {
+                        "Nutrient": "Protein",
+                        "Recommended Intake (Daily)": "45-60g",
+                        "Key Food Sources": "Eggs, milk, yogurt, lentils, chicken, nuts"
+                    },
+                    {
+                        "Nutrient": "Fats",
+                        "Recommended Intake (Daily)": "50-70g",
+                        "Key Food Sources": "Nuts, seeds, olive oil, avocados"
+                    },
+                    {
+                        "Nutrient": "Calcium",
+                        "Recommended Intake (Daily)": "1000mg",
+                        "Key Food Sources": "Milk, cheese, yogurt, leafy greens"
+                    },
+                    {
+                        "Nutrient": "Iron",
+                        "Recommended Intake (Daily)": "8-11mg",
+                        "Key Food Sources": "Spinach, legumes, red meat, fortified cereals"
+                    },
+                    {
+                        "Nutrient": "Vitamin D",
+                        "Recommended Intake (Daily)": "600 IU",
+                        "Key Food Sources": "Milk, eggs, sunlight"
+                    },
+                    {
+                        "Nutrient": "Fiber",
+                        "Recommended Intake (Daily)": "25-30g",
+                        "Key Food Sources": "Whole grains, fruits, vegetables"
+                    }
+                ]
+            },
+            "15-20": {
+                "Girls": [
+                    {
+                        "Nutrient": "Carbohydrates",
+                        "Recommended Intake (Daily)": "200-250g",
+                        "Key Food Sources": "Brown rice, whole-grain bread, fruits"
+                    },
+                    {
+                        "Nutrient": "Protein",
+                        "Recommended Intake (Daily)": "50-60g",
+                        "Key Food Sources": "Paneer, tofu, lentils, eggs, lean meat"
+                    },
+                    {
+                        "Nutrient": "Fats",
+                        "Recommended Intake (Daily)": "50-60g",
+                        "Key Food Sources": "Avocado, olive oil, almonds, fish"
+                    },
+                    {
+                        "Nutrient": "Calcium",
+                        "Recommended Intake (Daily)": "1000-1200mg",
+                        "Key Food Sources": "Dairy products, broccoli, fortified cereals"
+                    },
+                    {
+                        "Nutrient": "Iron",
+                        "Recommended Intake (Daily)": "15mg",
+                        "Key Food Sources": "Spinach, beans, eggs, fortified cereals"
+                    },
+                    {
+                        "Nutrient": "Vitamin D",
+                        "Recommended Intake (Daily)": "600 IU",
+                        "Key Food Sources": "Sunlight, fortified milk, mushrooms"
+                    },
+                    {
+                        "Nutrient": "Fiber",
+                        "Recommended Intake (Daily)": "25-30g",
+                        "Key Food Sources": "Whole grains, fruits, legumes"
+                    }
+                ],
+                "Boys": [
+                    {
+                        "Nutrient": "Carbohydrates",
+                        "Recommended Intake (Daily)": "250-300g",
+                        "Key Food Sources": "Whole grains, sweet potatoes, bananas"
+                    },
+                    {
+                        "Nutrient": "Protein",
+                        "Recommended Intake (Daily)": "60-70g",
+                        "Key Food Sources": "Eggs, chicken, fish, lentils, tofu"
+                    },
+                    {
+                        "Nutrient": "Fats",
+                        "Recommended Intake (Daily)": "60-70g",
+                        "Key Food Sources": "Nuts, seeds, fatty fish, olive oil"
+                    },
+                    {
+                        "Nutrient": "Calcium",
+                        "Recommended Intake (Daily)": "1000mg",
+                        "Key Food Sources": "Milk, cheese, green leafy vegetables"
+                    },
+                    {
+                        "Nutrient": "Iron",
+                        "Recommended Intake (Daily)": "11mg",
+                        "Key Food Sources": "Meat, spinach, nuts, beans"
+                    },
+                    {
+                        "Nutrient": "Vitamin D",
+                        "Recommended Intake (Daily)": "600 IU",
+                        "Key Food Sources": "Sunlight, fortified foods, eggs"
+                    },
+                    {
+                        "Nutrient": "Fiber",
+                        "Recommended Intake (Daily)": "30-35g",
+                        "Key Food Sources": "Vegetables, whole grains, legumes"
+                    }
+                ]
+            },
+            "20-25": {
+                "Girls": [
+                    {
+                        "Nutrient": "Carbohydrates",
+                        "Recommended Intake (Daily)": "180-220g",
+                        "Key Food Sources": "Whole grains, oats, quinoa"
+                    },
+                    {
+                        "Nutrient": "Protein",
+                        "Recommended Intake (Daily)": "50-60g",
+                        "Key Food Sources": "Eggs, lentils, tofu, low-fat dairy"
+                    },
+                    {
+                        "Nutrient": "Fats",
+                        "Recommended Intake (Daily)": "45-55g",
+                        "Key Food Sources": "Nuts, seeds, olive oil, fatty fish"
+                    },
+                    {
+                        "Nutrient": "Calcium",
+                        "Recommended Intake (Daily)": "1000mg",
+                        "Key Food Sources": "Yogurt, milk, kale, almonds"
+                    },
+                    {
+                        "Nutrient": "Iron",
+                        "Recommended Intake (Daily)": "18mg",
+                        "Key Food Sources": "Red meat, beans, lentils, spinach"
+                    },
+                    {
+                        "Nutrient": "Vitamin D",
+                        "Recommended Intake (Daily)": "600 IU",
+                        "Key Food Sources": "Fatty fish, fortified milk, sunlight"
+                    },
+                    {
+                        "Nutrient": "Fiber",
+                        "Recommended Intake (Daily)": "25-30g",
+                        "Key Food Sources": "Fruits, vegetables, whole grains"
+                    }
+                ],
+                "Boys": [
+                    {
+                        "Nutrient": "Carbohydrates",
+                        "Recommended Intake (Daily)": "250-300g",
+                        "Key Food Sources": "Brown rice, whole-grain bread, pasta"
+                    },
+                    {
+                        "Nutrient": "Protein",
+                        "Recommended Intake (Daily)": "65-75g",
+                        "Key Food Sources": "Chicken, fish, eggs, beans"
+                    },
+                    {
+                        "Nutrient": "Fats",
+                        "Recommended Intake (Daily)": "50-70g",
+                        "Key Food Sources": "Avocado, nuts, olive oil, fatty fish"
+                    },
+                    {
+                        "Nutrient": "Calcium",
+                        "Recommended Intake (Daily)": "1000mg",
+                        "Key Food Sources": "Cheese, fortified milk, leafy greens"
+                    },
+                    {
+                        "Nutrient": "Iron",
+                        "Recommended Intake (Daily)": "11mg",
+                        "Key Food Sources": "Meat, nuts, fortified cereals"
+                    },
+                    {
+                        "Nutrient": "Vitamin D",
+                        "Recommended Intake (Daily)": "600 IU",
+                        "Key Food Sources": "Sunlight, fortified orange juice"
+                    },
+                    {
+                        "Nutrient": "Fiber",
+                        "Recommended Intake (Daily)": "30-35g",
+                        "Key Food Sources": "Legumes, fruits, whole grains"
+                    }
+                ]
+            },
+            "25-30": {
+                "Girls": [
+                    {
+                        "Nutrient": "Carbohydrates",
+                        "Recommended Intake (Daily)": "180-220g",
+                        "Key Food Sources": "Quinoa, sweet potatoes, oats"
+                    },
+                    {
+                        "Nutrient": "Protein",
+                        "Recommended Intake (Daily)": "50-60g",
+                        "Key Food Sources": "Paneer, tofu, lentils, fish"
+                    },
+                    {
+                        "Nutrient": "Fats",
+                        "Recommended Intake (Daily)": "45-55g",
+                        "Key Food Sources": "Olive oil, walnuts, flaxseeds, fish"
+                    },
+                    {
+                        "Nutrient": "Calcium",
+                        "Recommended Intake (Daily)": "1000mg",
+                        "Key Food Sources": "Dairy, sesame seeds, fortified foods"
+                    },
+                    {
+                        "Nutrient": "Iron",
+                        "Recommended Intake (Daily)": "18mg",
+                        "Key Food Sources": "Spinach, fortified cereals, beans"
+                    },
+                    {
+                        "Nutrient": "Vitamin D",
+                        "Recommended Intake (Daily)": "600 IU",
+                        "Key Food Sources": "Salmon, fortified milk, sunlight"
+                    },
+                    {
+                        "Nutrient": "Fiber",
+                        "Recommended Intake (Daily)": "25-30g",
+                        "Key Food Sources": "Vegetables, legumes, whole grains"
+                    }
+                ],
+                "Boys": [
+                    {
+                        "Nutrient": "Carbohydrates",
+                        "Recommended Intake (Daily)": "200-250g",
+                        "Key Food Sources": "Rice, multigrain bread, potatoes"
+                    },
+                    {
+                        "Nutrient": "Protein",
+                        "Recommended Intake (Daily)": "65-75g",
+                        "Key Food Sources": "Eggs, chicken, fish, paneer"
+                    },
+                    {
+                        "Nutrient": "Fats",
+                        "Recommended Intake (Daily)": "50-70g",
+                        "Key Food Sources": "Nuts, avocados, fatty fish, olive oil"
+                    },
+                    {
+                        "Nutrient": "Calcium",
+                        "Recommended Intake (Daily)": "1000mg",
+                        "Key Food Sources": "Broccoli, dairy, fortified cereals"
+                    },
+                    {
+                        "Nutrient": "Iron",
+                        "Recommended Intake (Daily)": "11mg",
+                        "Key Food Sources": "Lentils, meat, spinach, nuts"
+                    },
+                    {
+                        "Nutrient": "Vitamin D",
+                        "Recommended Intake (Daily)": "600 IU",
+                        "Key Food Sources": "Egg yolks, sunlight, fortified foods"
+                    },
+                    {
+                        "Nutrient": "Fiber",
+                        "Recommended Intake (Daily)": "30-35g",
+                        "Key Food Sources": "Legumes, fruits, whole grains"
+                    }
+                ]
+            },
+            "30+": {
+                "Girls": [
+                    {
+                        "Nutrient": "Carbohydrates",
+                        "Recommended Intake (Daily)": "150-200g",
+                        "Key Food Sources": "Whole grains, fruits, quinoa"
+                    },
+                    {
+                        "Nutrient": "Protein",
+                        "Recommended Intake (Daily)": "50-55g",
+                        "Key Food Sources": "Low-fat dairy, fish, lentils, beans"
+                    },
+                    {
+                        "Nutrient": "Fats",
+                        "Recommended Intake (Daily)": "40-50g",
+                        "Key Food Sources": "Olive oil, almonds, walnuts, flaxseeds"
+                    },
+                    {
+                        "Nutrient": "Calcium",
+                        "Recommended Intake (Daily)": "1200mg",
+                        "Key Food Sources": "Dairy, fortified soy products, broccoli"
+                    },
+                    {
+                        "Nutrient": "Iron",
+                        "Recommended Intake (Daily)": "8mg",
+                        "Key Food Sources": "Beans, fortified cereals, spinach"
+                    },
+                    {
+                        "Nutrient": "Vitamin D",
+                        "Recommended Intake (Daily)": "800 IU",
+                        "Key Food Sources": "Fatty fish, fortified foods, sunlight"
+                    },
+                    {
+                        "Nutrient": "Fiber",
+                        "Recommended Intake (Daily)": "25-30g",
+                        "Key Food Sources": "Vegetables, fruits, whole grains"
+                    }
+                ],
+                "Boys": [
+                    {
+                        "Nutrient": "Carbohydrates",
+                        "Recommended Intake (Daily)": "180-220g",
+                        "Key Food Sources": "Oats, whole grains, vegetables"
+                    },
+                    {
+                        "Nutrient": "Protein",
+                        "Recommended Intake (Daily)": "60-70g",
+                        "Key Food Sources": "Fish, chicken, eggs, lentils"
+                    },
+                    {
+                        "Nutrient": "Fats",
+                        "Recommended Intake (Daily)": "40-60g",
+                        "Key Food Sources": "Avocado, fish oil, nuts"
+                    },
+                    {
+                        "Nutrient": "Calcium",
+                        "Recommended Intake (Daily)": "1200mg",
+                        "Key Food Sources": "Milk, almonds, green vegetables"
+                    },
+                    {
+                        "Nutrient": "Iron",
+                        "Recommended Intake (Daily)": "8mg",
+                        "Key Food Sources": "Meat, beans, fortified grains"
+                    },
+                    {
+                        "Nutrient": "Vitamin D",
+                        "Recommended Intake (Daily)": "800 IU",
+                        "Key Food Sources": "Sunlight, fortified foods, eggs"
+                    },
+                    {
+                        "Nutrient": "Fiber",
+                        "Recommended Intake (Daily)": "30-35g",
+                        "Key Food Sources": "Fruits, legumes, whole grains"
+                    }
+                ]
+            }
+        };
+
+        function createTable(data) {
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+
+            // Create header row
+            const headerRow = document.createElement('tr');
+            ['Nutrient', 'Recommended Intake (Daily)', 'Key Food Sources'].forEach(text => {
+                const th = document.createElement('th');
+                th.textContent = text;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+
+            // Create data rows
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                ['Nutrient', 'Recommended Intake (Daily)', 'Key Food Sources'].forEach(key => {
+                    const td = document.createElement('td');
+                    td.textContent = item[key];
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            return table;
+        }
+
+        document.getElementById('selectionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const ageGroup = document.getElementById('ageGroup').value;
+            const gender = document.getElementById('gender').value;
+
+            const chartSection = document.getElementById('chartSection');
+            const chartTitle = document.getElementById('chartTitle');
+            const nutrientTables = document.getElementById('nutrientTables');
+
+            nutrientTables.innerHTML = '';
+
+            let dataKey = gender;
+            if (ageGroup === '10-15') {
+                dataKey = 'Girls and Boys';
+            }
+
+            const data = nutrientData[ageGroup] ? nutrientData[ageGroup][dataKey] : null;
+
+            if (!data) {
+                chartTitle.textContent = 'No data available for the selected age group and gender.';
+                chartSection.classList.remove('hidden');
+                return;
+            }
+
+            chartTitle.textContent = `Nutrient Chart for Age Group ${ageGroup} (${gender})`;
+
+            const table = createTable(data);
+            nutrientTables.appendChild(table);
+
+            chartSection.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
