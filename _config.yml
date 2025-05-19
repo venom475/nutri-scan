@@ -1,0 +1,25 @@
+# Basic Jekyll configuration file
+
+title: NutriScan
+description: Nutrition analysis platform
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site
+
+# Source and destination directories
+source: .
+destination: ./_site
+
+# Exclude files and folders from build
+exclude:
+  - node_modules
+  - vendor
+  - README.md
+
+# Sass/SCSS configuration
+sass:
+  sass_dir: assets/css
+  style: compressed
+
+# Build settings
+markdown: kramdown
+theme: minima
